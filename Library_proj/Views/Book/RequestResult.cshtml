@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Результат заявки";
+}
+
+<h1>Результат заявки</h1>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">@ViewBag.Message</div>
+}
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+}
+
+<a asp-controller="Book" asp-action="Index" class="btn btn-primary">Повернутися до списку книг</a>

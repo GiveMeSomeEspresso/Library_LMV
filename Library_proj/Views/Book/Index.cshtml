@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Library_proj.Models.Book>
+
+@{
+    ViewData["Title"] = "Книги";
+}
+
+<h1>Книги</h1>
+
+<p>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create">Додати нову книгу</a>
+    }
+</p>
+<form asp-action="Search" method="get">
+    <div class="form-group">
+        <input type="text" class="form-control" name="searchTerm" placeholder="Введіть назву, автора або жанр" />
+    </div>
+    <button type="submit" class="btn btn-primary">Пошук</button>
+</form>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PublicationYear)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ISBN)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AvailableQuantity)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PublicationYear)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISBN)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AvailableQuantity)
+                </td>
+                <td>
+                    @if (!User.IsInRole("Admin"))
+                    {
+                        @if (item.Requests.Any(r => r.UserId == ViewBag.CurrentUserId))
+                        {
+                            <form asp-action="CancelRequest" asp-controller="Book" asp-route-id="@item.Id" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Скасувати заявку</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a asp-action="RequestBook" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Подати заявку</a>
+                        }
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Редагувати</a>
+                        <span>|</span>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Видалити</a>
+                        <span>|</span>
+                        <a asp-action="Borrow" asp-route-id="@item.Id" class="btn btn-sm btn-outline-success">Видати</a>
+                        <span>|</span>
+                        <a asp-action="ReturnBook" asp-route-bookId="@item.Id" class="btn btn-sm btn-outline-warning">Повернути</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

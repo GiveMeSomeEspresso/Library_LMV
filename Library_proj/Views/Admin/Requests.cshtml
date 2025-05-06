@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Library_proj.Models.Request>
+
+<h2>Список заявок</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Книга</th>
+            <th>Користувач</th>
+            <th>Дії</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in Model)
+        {
+            <tr>
+                <td>@request.Book?.Title</td>
+                <td>@request.User?.UserName</td>
+                <td>
+                    <form asp-action="Borrow" asp-controller="Book" asp-route-id="@request.BookId" method="get">
+                        <input type="hidden" name="userId" value="@request.UserId" />
+                        <button type="submit" class="btn btn-sm btn-success">Видати</button>
+                    </form>
+                    <form asp-action="CancelRequest" asp-controller="Book" asp-route-id="@request.Id" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-danger">Відмовити</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

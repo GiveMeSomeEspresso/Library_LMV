@@ -1,0 +1,19 @@
+﻿@model Library_proj.Models.ViewModels.BorrowViewModel
+
+<h2>Видати книгу "@Model.BookTitle"</h2>
+
+<form asp-action="Borrow" method="post">
+    <input type="hidden" asp-for="BookId" />
+    <div class="form-group">
+        <label asp-for="UserId" class="control-label">Користувач</label>
+        <select asp-for="UserId" class="form-control" asp-items="@Model.Users"></select>
+        <span asp-validation-for="UserId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Видати" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Назад до списку книг</a>
+</div>

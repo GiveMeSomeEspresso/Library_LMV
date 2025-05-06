@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Library_proj.Models.Borrowing>
+
+<h2>Повернення книги</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Назва книги</th>
+                <th>Користувач</th>
+                <th>Дата видачі</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var borrowing in Model)
+            {
+                <tr>
+                    <td>@borrowing.Book?.Title</td>
+                    <td>@borrowing.User?.UserName</td>
+                    <td>@borrowing.BorrowDate.ToShortDateString()</td>
+                    <td>
+                        <form asp-action="ReturnBook" asp-controller="Book" asp-route-id="@borrowing.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-success">Підтвердити повернення</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Для цієї книги не знайдено активних видач.</p>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
